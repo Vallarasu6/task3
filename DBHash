@@ -1,0 +1,83 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+
+import java.util.Scanner;
+class customer{
+     
+    private int id;
+    private String bankname;
+    private String accnum;
+    private String balance;
+    
+    public customer(){
+      
+        }
+    public customer(int id,String bankname,String accnum,String balance){
+        
+        this.id=id;
+        this.bankname=bankname;
+        this.accnum=accnum;
+        this.balance=balance;
+    }
+    public int getid(){
+        return this.id;
+    }
+    public String getbankname(){
+        return this.bankname;
+    }
+    public String getaccnum(){
+        return this.accnum;
+    }
+    public String getbalance(){
+        return this.balance;
+    }
+    
+}
+public class Work{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/hash","root","");
+            HashMap<Integer,customer> map = new HashMap<Integer,customer>();
+            customer c;
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * from account");
+            
+            while(rs.next()){
+                
+                 Integer id = rs.getInt("id");
+                String bankname = rs.getString("bankname");
+                String accnum = rs.getString("accnum");
+                String balance = rs.getString("balance");
+                c = new customer(id,bankname,accnum,balance);
+                map.put(id,c);
+                
+                
+            }
+//             for(Integer i : map.keySet()){
+//            customer cs = map.get(i);
+//            System.out.println(cs.getid()+" "+cs.getname()+" "+cs.getplace()+" "+cs.getposition());
+//        }
+             con.close();
+             System.out.println("Enter the id For the BALANCE checking");
+             int i = sc.nextInt();
+                 
+ customer cs = map.get(i);
+
+            System.out.println("The balance for the given is"+" "+cs.getbalance());
+           
+            
+             
+            
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        
+    }
+}
